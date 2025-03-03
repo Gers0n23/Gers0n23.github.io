@@ -729,6 +729,24 @@ p {
 }
 
 @media screen and (max-width: 768px) {
+    .hero {
+        height: auto; /* Cambiamos de 100vh a auto */
+        min-height: 100vh; /* Aseguramos un mínimo */
+        padding-bottom: 3rem; /* Añadimos padding inferior */
+    }
+    
+    .hero .container {
+        padding-top: 2rem; /* Espacio adicional en la parte superior */
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .hero-content {
+        margin-top: 3rem; /* Espacio adicional para evitar solapamiento con la barra de navegación */
+    }
+}
+
+@media screen and (max-width: 768px) {
     .nav-links {
         position: absolute;
         right: 0;
