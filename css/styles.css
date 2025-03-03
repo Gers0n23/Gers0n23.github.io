@@ -59,9 +59,18 @@ ul {
 }
 
 .container {
-    max-width: var(--container-width);
-    margin: 0 auto;
-    padding: 0 20px;
+    width: 100%;
+    max-width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+}
+
+section {
+    width: 100vw;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 /* Encabezados y Tipografía */
@@ -693,8 +702,22 @@ p {
     }
     
     .about-content {
-        flex-direction: column;
+        display: block; /* Cambiar de flex a block */
+        width: 100%;
+        max-width: 100%;
+        padding: 0 15px;
+        box-sizing: border-box;
+    }
+
+    .about-image, .about-text {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto 2rem;
         text-align: center;
+    }
+    
+    .image-container {
+        margin: 0 auto;
     }
     
     .about-details {
