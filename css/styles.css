@@ -280,8 +280,10 @@ p {
     border-radius: var(--border-radius);
     padding: 2rem;
     max-width: 500px;
+    width: 100%;
     box-shadow: var(--shadow-lg);
     transform: rotate(2deg);
+    overflow: auto; /* Permite scroll si el contenido es muy ancho */
 }
 
 .code-block pre {
@@ -701,6 +703,28 @@ p {
     
     .contact-content {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Media query para dispositivos móviles */
+@media screen and (max-width: 768px) {
+    .code-block {
+        max-width: 90%; /* Limitar el ancho en móviles */
+        padding: 1.5rem;
+        transform: none; /* Quitar rotación en móviles */
+        margin: 0 auto; /* Centrar */
+    }
+    
+    .code-block code {
+        font-size: 0.8rem; /* Texto más pequeño */
+        white-space: pre-wrap; /* Permitir que el texto se divida */
+        word-break: break-word; /* Evitar desbordamiento de palabras largas */
+    }
+    
+    .hero-image {
+        width: 100%; /* Asegurar que el contenedor se ajuste */
+        display: flex;
+        justify-content: center;
     }
 }
 
