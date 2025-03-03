@@ -817,3 +817,46 @@ p {
         max-width: 200px;
     }
 }
+
+/* Alineación de contenido en móviles */
+@media screen and (max-width: 768px) {
+    .about-content, .skills-grid, .projects-grid, .contact-content {
+        padding: 0; /* Eliminar padding innecesario */
+        width: 100%; /* Asegurar que ocupe todo el ancho disponible */
+    }
+    
+    .container {
+        padding: 0 15px; /* Reducir el padding del contenedor */
+        width: 100%; /* Asegurar ancho completo */
+    }
+    
+    .skill-item, .project-card {
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%; /* Ocupar todo el ancho disponible */
+    }
+    
+    /* Arreglo del footer */
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    
+    .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .footer-social {
+        justify-content: center;
+    }
+    
+    .footer-bottom {
+        text-align: center;
+        margin-top: 1rem;
+    }
+}
