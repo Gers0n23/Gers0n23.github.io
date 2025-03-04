@@ -413,6 +413,16 @@ p {
     justify-content: center;
 }
 
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    filter: grayscale(100%); /* Efecto blanco y negro */
+    transition: filter 0.3s ease; /* Transición suave */
+}
+
+
 .skill-item {
     flex: 0 0 300px; 
 }

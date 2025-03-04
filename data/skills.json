@@ -1,0 +1,100 @@
+{
+  "technical_skills": [
+    {
+      "name": "Python",
+      "level": "Experto",
+      "levelValue": 90,
+      "category": "programming"
+    },
+    {
+      "name": "JavaScript",
+      "level": "Avanzado",
+      "levelValue": 80,
+      "category": "programming"
+    },
+    {
+      "name": "HTML/CSS",
+      "level": "Avanzado",
+      "levelValue": 85,
+      "category": "programming"
+    },
+    {
+      "name": "Django",
+      "level": "Avanzado",
+      "levelValue": 80,
+      "category": "programming"
+    },
+    {
+      "name": "React Native",
+      "level": "Medio",
+      "levelValue": 75,
+      "category": "programming"
+    },
+    {
+      "name": "SQL",
+      "level": "Experto",
+      "levelValue": 90,
+      "category": "databases"
+    },
+    {
+      "name": "MongoDB",
+      "level": "Medio",
+      "levelValue": 70,
+      "category": "databases"
+    },
+    {
+      "name": "Power BI",
+      "level": "Experto",
+      "levelValue": 95,
+      "category": "analytics"
+    },
+    {
+      "name": "EasyMorph",
+      "level": "Experto",
+      "levelValue": 90,
+      "category": "analytics"
+    },
+    {
+      "name": "Excel",
+      "level": "Experto",
+      "levelValue": 95,
+      "category": "analytics"
+    },
+    {
+      "name": "Azure ML",
+      "level": "Avanzado",
+      "levelValue": 80,
+      "category": "analytics"
+    },
+    {
+      "name": "Pandas/NumPy",
+      "level": "Avanzado",
+      "levelValue": 85,
+      "category": "datascience"
+    },
+    {
+      "name": "Scikit-learn",
+      "level": "Avanzado",
+      "levelValue": 80,
+      "category": "datascience"
+    },
+    {
+      "name": "Matplotlib/Seaborn",
+      "level": "Avanzado",
+      "levelValue": 85,
+      "category": "datascience"
+    },
+    {
+      "name": "ETL Processes",
+      "level": "Experto",
+      "levelValue": 90,
+      "category": "dataeng"
+    },
+    {
+      "name": "API Integration",
+      "level": "Avanzado",
+      "levelValue": 80,
+      "category": "dataeng"
+    }
+  ]
+}
