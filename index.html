@@ -8,6 +8,7 @@
         <!-- Nuevo archivo CSS para el gráfico de habilidades -->
         <link rel="stylesheet" href="css/skills-chart.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="css/project-modal.css">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     </head>
 <body>
@@ -200,108 +201,26 @@ def data_scientist(datos):
     </section>
 
     <!-- Sección Proyectos Actualizada -->
-<section id="projects" class="projects">
-    <div class="container">
-        <h2 class="section-title">Mis Proyectos</h2>
-        <div class="projects-filter">
-            <button class="filter-btn active" data-filter="all">Todos</button>
-            <button class="filter-btn" data-filter="data-science">Data Science & ML</button>
-            <button class="filter-btn" data-filter="visualizacion">Dashboards & BI</button>
-            <button class="filter-btn" data-filter="desarrollo">Desarrollo Web/Apps</button>
-            <button class="filter-btn" data-filter="logistica">Sistemas Logísticos</button>
-        </div>
-        
-        <div class="projects-grid">
-            <!-- Proyecto 1: Forecasting -->
-            <div class="project-card" data-category="data-science">
-                <div class="project-img">
-                    <img src="img/forecasting-project.jpg" alt="Sistema de Forecasting">
-                </div>
-                <div class="project-info">
-                    <h3>Sistema de Forecasting para Inventarios</h3>
-                    <p>Modelo predictivo que optimiza la gestión de inventarios mediante algoritmos de machine learning, reduciendo sobrestocks y roturas de stock.</p>
-                    <div class="project-tags">
-                        <span>Python</span>
-                        <span>Scikit-learn</span>
-                        <span>Prophet</span>
-                        <span>Pandas</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/Gers0n23/inventory-forecast" class="btn btn-sm">Ver Demo</a>
-                        <a href="https://github.com/Gers0n23/inventory-forecast" class="btn btn-sm btn-outline">Código <i class="fab fa-github"></i></a>
-                    </div>
-                </div>
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Mis Proyectos</h2>
+            <div class="projects-filter">
+                <button class="filter-btn active" data-filter="all">Todos</button>
+                <button class="filter-btn" data-filter="data-science">Data Science & ML</button>
+                <button class="filter-btn" data-filter="visualizacion">Dashboards & BI</button>
+                <button class="filter-btn" data-filter="desarrollo">Desarrollo Web/Apps</button>
+                <button class="filter-btn" data-filter="logistica">Sistemas Logísticos</button>
             </div>
             
-            <!-- Proyecto 2: Dashboard KPIs -->
-            <div class="project-card" data-category="visualizacion">
-                <div class="project-img">
-                    <img src="img/dashboard-kpi.jpg" alt="Dashboard KPIs Logísticos">
-                </div>
-                <div class="project-info">
-                    <h3>Dashboard KPIs Logísticos en Tiempo Real</h3>
-                    <p>Sistema de visualización para monitoreo de métricas clave de desempeño logístico con actualización en tiempo real y alertas automatizadas.</p>
-                    <div class="project-tags">
-                        <span>Power BI</span>
-                        <span>DAX</span>
-                        <span>SQL</span>
-                        <span>REST API</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/Gers0n23/logistics-kpi-dashboard" class="btn btn-sm">Ver Demo</a>
-                        <a href="https://github.com/Gers0n23/logistics-kpi-dashboard" class="btn btn-sm btn-outline">Código <i class="fab fa-github"></i></a>
-                    </div>
-                </div>
+            <div class="projects-grid">
+                <!-- Los proyectos se cargarán dinámicamente desde projects-data.js -->
             </div>
             
-            <!-- Proyecto 3: Sistema Gestor -->
-            <div class="project-card" data-category="desarrollo">
-                <div class="project-img">
-                    <img src="img/product-manager.jpg" alt="Sistema Gestor de Productos">
-                </div>
-                <div class="project-info">
-                    <h3>Sistema Gestor de Productos con API</h3>
-                    <p>Aplicación web fullstack para la gestión de inventario de supermercado con API RESTful y dashboard para análisis de movimientos de productos.</p>
-                    <div class="project-tags">
-                        <span>Django</span>
-                        <span>Python</span>
-                        <span>React</span>
-                        <span>SQL</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/Gers0n23/supermarket-api" class="btn btn-sm">Ver Demo</a>
-                        <a href="https://github.com/Gers0n23/ProgramacionBackend/tree/main/evaluaciones/Sumativa4/gestion_productos" class="btn btn-sm btn-outline">Código <i class="fab fa-github"></i></a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Proyecto 4: App Planificación -->
-            <div class="project-card" data-category="logistica">
-                <div class="project-img">
-                    <img src="img/demand-planning.jpg" alt="App Planificación de Demanda">
-                </div>
-                <div class="project-info">
-                    <h3>Aplicación Móvil para Planificación de Demanda</h3>
-                    <p>App móvil que permite a los equipos logísticos ajustar pronósticos de demanda en tiempo real desde cualquier ubicación, integrándose con sistemas ERP.</p>
-                    <div class="project-tags">
-                        <span>React Native</span>
-                        <span>Python</span>
-                        <span>FastAPI</span>
-                        <span>Azure</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/Gers0n23/demand-planning-app" class="btn btn-sm">Ver Demo</a>
-                        <a href="https://github.com/Gers0n23/demand-planning-app" class="btn btn-sm btn-outline">Código <i class="fab fa-github"></i></a>
-                    </div>
-                </div>
+            <div class="projects-more">
+                <a href="https://github.com/Gers0n23" class="btn btn-primary">Ver Más Proyectos en GitHub</a>
             </div>
         </div>
-        
-        <div class="projects-more">
-            <a href="https://github.com/Gers0n23" class="btn btn-primary">Ver Más Proyectos en GitHub</a>
-        </div>
-    </div>
-</section>
+    </section>
 
 <!-- Sección Contacto (Rediseñada) -->
 <section id="contact" class="contact">
@@ -406,5 +325,7 @@ def data_scientist(datos):
 
     <script src="js/script.js"></script>
     <script src="js/skills-chart.js"></script>
+    <script src="js/projects-data.js"></script>
+    <script src="js/projects-manager.js"></script>
 </body>
 </html>
