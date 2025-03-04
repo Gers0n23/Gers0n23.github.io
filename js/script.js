@@ -179,6 +179,26 @@ document.addEventListener('DOMContentLoaded', function() {
     `);
 });
 
+// Función para ajustar el ancho de los contenedores en escritorio
+function adjustContainers() {
+    const containers = document.querySelectorAll('.container');
+    const windowWidth = window.innerWidth;
+    
+    if (windowWidth >= 992) {
+        containers.forEach(container => {
+            container.style.maxWidth = 'var(--container-width)';
+        });
+    } else {
+        containers.forEach(container => {
+            container.style.maxWidth = '100%';
+        });
+    }
+}
+
+// Ejecutar al cargar y cuando cambie el tamaño de la ventana
+window.addEventListener('DOMContentLoaded', adjustContainers);
+window.addEventListener('resize', adjustContainers);
+
 // Función para escribir el código en la sección hero con efecto de typing
 document.addEventListener('DOMContentLoaded', function() {
     const codeElement = document.querySelector('.code-block code');

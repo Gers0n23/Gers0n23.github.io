@@ -60,14 +60,15 @@ ul {
 
 .container {
     width: 100%;
-    max-width: 100%;
+    max-width: var(--container-width);
+    margin: 0 auto;
     padding-left: 15px;
     padding-right: 15px;
     box-sizing: border-box;
 }
 
 section {
-    width: 100vw;
+    width: 100%;
     max-width: 100%;
     overflow-x: hidden;
     box-sizing: border-box;
@@ -842,6 +843,16 @@ p {
 }
 
 /* Alineación de contenido en móviles */
+
+@media screen and (min-width: 992px) {
+    .about-content, 
+    .skills-grid, 
+    .projects-grid {
+        max-width: var(--container-width);
+        margin: 0 auto;
+    }
+}
+
 @media screen and (max-width: 768px) {
     .about-content, .skills-grid, .projects-grid, .contact-content {
         padding: 0; /* Eliminar padding innecesario */
