@@ -259,7 +259,19 @@ p {
 .hero .container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center; /* Cambiar a center en vez de space-between */
+    gap: 3rem; /* Agregar espacio entre elementos */
+}
+
+@media screen and (max-width: 992px) {
+    .hero-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centrar el contenido */
+        text-align: center;
+        padding-right: 0;
+        margin-bottom: 3rem;
+    }
 }
 
 .hero-content {
@@ -395,17 +407,14 @@ p {
 }
 
 .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 2rem;
+    justify-content: center;
 }
 
 .skill-item {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
+    flex: 0 0 300px; 
 }
 
 .skill-item:hover {
