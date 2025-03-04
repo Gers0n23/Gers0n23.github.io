@@ -1,5 +1,4 @@
 // Datos de habilidades integrados directamente en el archivo JS
-// No es necesario hacer fetch a un archivo externo
 const skillsData = {
   "technical_skills": [
     {
@@ -141,6 +140,25 @@ function createSkillsChart() {
     `;
 
     const chartContent = document.getElementById('skills-chart-content');
+    
+    // Crear un contenedor para la estructura de columnas
+    const columnsContainer = document.createElement('div');
+    columnsContainer.className = 'skills-columns';
+    chartContent.appendChild(columnsContainer);
+    
+    // Crear columnas
+    const leftColumn = document.createElement('div');
+    leftColumn.className = 'skills-column';
+    
+    const rightColumn = document.createElement('div');
+    rightColumn.className = 'skills-column';
+    
+    columnsContainer.appendChild(leftColumn);
+    columnsContainer.appendChild(rightColumn);
+    
+    // Distribuir categorías entre las columnas
+    let columnCounter = 0;
+    const columnsArr = [leftColumn, rightColumn];
 
     // Crear gráficos por cada categoría
     for (const [key, category] of Object.entries(categories)) {
@@ -156,7 +174,11 @@ function createSkillsChart() {
             <h4 class="category-title">${category.title}</h4>
             <div class="skills-bars" id="skills-${key}"></div>
         `;
-        chartContent.appendChild(categorySection);
+        
+        // Alternar entre columnas
+        const targetColumn = columnsArr[columnCounter % columnsArr.length];
+        targetColumn.appendChild(categorySection);
+        columnCounter++;
 
         const skillsContainer = document.getElementById(`skills-${key}`);
 
@@ -164,6 +186,8 @@ function createSkillsChart() {
         category.skills.forEach(skill => {
             const skillBar = document.createElement('div');
             skillBar.className = 'skill-bar';
+            
+            // Asegurarnos de que la barra de progreso tenga el ancho correcto según levelValue
             skillBar.innerHTML = `
                 <div class="skill-info">
                     <span class="skill-name">${skill.name}</span>
