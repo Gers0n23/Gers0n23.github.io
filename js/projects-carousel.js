@@ -1,6 +1,13 @@
 // Archivo: js/projects-carousel.js
 // Gestiona el carrusel de proyectos
 
+function getProjectImage(imgContainer) {
+    if (!imgContainer || !imgContainer.querySelector('img') || !imgContainer.querySelector('img').src) {
+        return `<img src="img/proyectos_plantilla" alt="Imagen de proyecto" onerror="this.src='img/proyecto_default.jpg'">`;
+    }
+    return imgContainer.innerHTML;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Inicializar el carrusel después de que se carguen los proyectos
     setTimeout(initProjectsCarousel, 100);
@@ -69,7 +76,7 @@ function initProjectsCarousel() {
                 // Construir la tarjeta simplificada
                 card.innerHTML = `
                     <div class="project-img">
-                        ${imgContainer.innerHTML}
+                        ${getProjectImage(imgContainer)}
                     </div>
                     <div class="project-info">
                         <h3>${title}</h3>
@@ -82,7 +89,7 @@ function initProjectsCarousel() {
                         </div>
                     </div>
                 `;
-                
+
                 // Añadir listener para abrir el modal al hacer clic en cualquier parte de la tarjeta
                 card.addEventListener('click', function(e) {
                     // Evitar la propagación si se hace clic en un botón o enlace
