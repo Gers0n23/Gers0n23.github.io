@@ -1,6 +1,30 @@
 // Archivo: js/projects-manager.js
 // Gestiona la visualización de proyectos y el modal de detalles
 
+window.openProjectModal = function(projectId) {
+    // Encontrar el índice del proyecto seleccionado
+    currentProjectIndex = PROJECTS_DATA.findIndex(p => p.id === projectId);
+    
+    if (currentProjectIndex === -1) {
+        console.error('Proyecto no encontrado');
+        return;
+    }
+    
+    // Obtener los datos del proyecto
+    const project = PROJECTS_DATA[currentProjectIndex];
+    
+    // Construir y mostrar el modal
+    buildProjectModal(project);
+    
+    // Mostrar el modal
+    const modalOverlay = document.getElementById('projectModalOverlay');
+    if (modalOverlay) {
+        modalOverlay.style.display = 'flex';
+        // Bloquear el scroll del body
+        document.body.style.overflow = 'hidden';
+    }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     // Variables globales
     let currentProjectIndex = 0;
@@ -59,11 +83,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Función para abrir el modal de proyecto
     function openProjectModal(projectId) {
+        console.log("Abriendo modal para proyecto:", projectId); // Añadir para depuración
+        
         // Encontrar el índice del proyecto seleccionado
         currentProjectIndex = PROJECTS_DATA.findIndex(p => p.id === projectId);
         
         if (currentProjectIndex === -1) {
-            console.error('Proyecto no encontrado');
+            console.error('Proyecto no encontrado:', projectId);
             return;
         }
         
@@ -75,6 +101,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Mostrar el modal
         const modalOverlay = document.getElementById('projectModalOverlay');
+        if (!modalOverlay) {
+            console.error('Modal overlay no encontrado');
+            return;
+        }
+        
         modalOverlay.style.display = 'flex';
         
         // Bloquear el scroll del body
