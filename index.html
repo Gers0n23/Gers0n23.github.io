@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="css/skills-chart.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="stylesheet" href="css/project-modal.css">
+        <link rel="stylesheet" href="css/projects-carousel.css">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     </head>
 <body>
@@ -206,11 +207,26 @@ def data_scientist(datos):
         <div class="container">
             <h2 class="section-title">Mis Proyectos</h2>
             <div class="projects-filter">
-                <button class="filter-btn active" data-filter="all">Todos</button>
-                <button class="filter-btn" data-filter="data-science">Data Science & ML</button>
-                <button class="filter-btn" data-filter="visualizacion">Dashboards & BI</button>
-                <button class="filter-btn" data-filter="desarrollo">Desarrollo Web/Apps</button>
-                <button class="filter-btn" data-filter="logistica">Sistemas Logísticos</button>
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-th filter-icon"></i>
+                    <span class="filter-text">Todos</span>
+                </button>
+                <button class="filter-btn" data-filter="data-science">
+                    <i class="fas fa-brain filter-icon"></i>
+                    <span class="filter-text">Data Science</span>
+                </button>
+                <button class="filter-btn" data-filter="visualizacion">
+                    <i class="fas fa-chart-pie filter-icon"></i>
+                    <span class="filter-text">Dashboards</span>
+                </button>
+                <button class="filter-btn" data-filter="desarrollo">
+                    <i class="fas fa-code filter-icon"></i>
+                    <span class="filter-text">Desarrollo</span>
+                </button>
+                <button class="filter-btn" data-filter="logistica">
+                    <i class="fas fa-truck filter-icon"></i>
+                    <span class="filter-text">Logística</span>
+                </button>
             </div>
             
             <div class="projects-grid">
@@ -328,5 +344,6 @@ def data_scientist(datos):
     <script src="js/skills-chart.js"></script>
     <script src="js/projects-data.js"></script>
     <script src="js/projects-manager.js"></script>
+    <script src="js/projects-carousel.js"></script>
 </body>
 </html>

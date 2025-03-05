@@ -1111,3 +1111,57 @@ p {
         padding: 3rem 2rem;
     }
 }
+
+/* Mejoras para el filtro de proyectos en móvil */
+.projects-filter {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* Estilo para versión móvil con iconos */
+@media screen and (max-width: 768px) {
+    .projects-filter {
+        flex-direction: row; /* Forzar dirección horizontal */
+        justify-content: space-between;
+        max-width: 100%;
+        overflow-x: auto; /* Permitir scroll horizontal si es necesario */
+        padding-bottom: 10px; /* Espacio para el scrollbar */
+    }
+    
+    .filter-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: none;
+        background-color: transparent;
+        padding: 8px 12px;
+        border-radius: var(--border-radius);
+        transition: all 0.3s ease;
+        width: auto;
+        min-width: auto;
+        position: relative;
+    }
+    
+    .filter-btn .filter-icon {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+    }
+    
+    .filter-btn .filter-text {
+        font-size: 0.7rem;
+        opacity: 0.8;
+        max-width: 60px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .filter-btn:hover, .filter-btn.active {
+        background-color: var(--primary-color);
+        color: white;
+    }
+}
