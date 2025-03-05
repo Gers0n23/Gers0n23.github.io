@@ -2,10 +2,15 @@
 // Gestiona el carrusel de proyectos
 
 function getProjectImage(imgContainer) {
-    if (!imgContainer || !imgContainer.querySelector('img') || !imgContainer.querySelector('img').src) {
-        return `<img src="img/proyectos_plantilla" alt="Imagen de proyecto" onerror="this.src='img/proyecto_default.jpg'">`;
+    if (!imgContainer || !imgContainer.querySelector('img')) {
+        return `<img src="img/proyecto_default.jpg" alt="Imagen de proyecto">`;
     }
-    return imgContainer.innerHTML;
+    
+    // Modificar todas las imágenes para agregar el atributo onerror
+    const imgHTML = imgContainer.innerHTML;
+    const modifiedHTML = imgHTML.replace('<img ', '<img onerror="this.src=\'img/proyecto_default.jpg\'" ');
+    
+    return modifiedHTML;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
