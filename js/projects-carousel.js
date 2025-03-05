@@ -5,16 +5,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar el carrusel después de que se carguen los proyectos
     setTimeout(initProjectsCarousel, 100);
     
-    // Agregar evento a los botones de filtro para mostrar/ocultar el texto
+    // Manejar los botones de filtro para dispositivos móviles
     const filterBtns = document.querySelectorAll('.filter-btn');
     filterBtns.forEach(btn => {
         btn.addEventListener('click', function() {
-            // Actualizar el texto visible solo para el botón activo
-            filterBtns.forEach(otherBtn => {
-                if (otherBtn !== this) {
-                    otherBtn.classList.remove('active');
-                }
-            });
+            // Quitar clase active de todos los botones
+            filterBtns.forEach(b => b.classList.remove('active'));
+            // Añadir clase active al botón actual
+            this.classList.add('active');
         });
     });
 });
@@ -87,14 +85,17 @@ function initProjectsCarousel() {
                 
                 // Añadir listener para abrir el modal al hacer clic en cualquier parte de la tarjeta
                 card.addEventListener('click', function(e) {
-                    // Ignorar si se hace clic en el botón de código
-                    if (e.target.closest('.btn-outline') || e.target.classList.contains('btn-outline')) {
+                    // Evitar la propagación si se hace clic en un botón o enlace
+                    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || 
+                        e.target.closest('button') || e.target.closest('a')) {
                         return;
                     }
                     
                     // Encontrar y hacer clic en el botón de detalles
                     const detailsBtn = this.querySelector('.project-details-btn');
                     if (detailsBtn) {
+                        e.preventDefault(); // Prevenir comportamiento predeterminado
+                        e.stopPropagation(); // Detener propagación
                         detailsBtn.click();
                     }
                 });
