@@ -1,42 +1,20 @@
 // Archivo: js/projects-carousel.js
-// Gestiona el carrusel de proyectos
-
-function getProjectImage(imgContainer) {
-    if (!imgContainer || !imgContainer.querySelector('img')) {
-        return `<img src="img/proyecto_default.jpg" alt="Imagen de proyecto">`;
-    }
-    
-    // Modificar todas las imágenes para agregar el atributo onerror
-    const imgHTML = imgContainer.innerHTML;
-    const modifiedHTML = imgHTML.replace('<img ', '<img onerror="this.src=\'img/proyecto_default.jpg\'" ');
-    
-    return modifiedHTML;
-}
+// Gestiona el carrusel de proyectos en la página principal
 
 document.addEventListener('DOMContentLoaded', function() {
     // Inicializar el carrusel después de que se carguen los proyectos
-    setTimeout(initProjectsCarousel, 100);
-    
-    // Manejar los botones de filtro para dispositivos móviles
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            // Quitar clase active de todos los botones
-            filterBtns.forEach(b => b.classList.remove('active'));
-            // Añadir clase active al botón actual
-            this.classList.add('active');
-        });
-    });
+    setTimeout(initProjectsCarousel, 200);
 });
 
 function initProjectsCarousel() {
     const projectsGrid = document.querySelector('.projects-grid');
     if (!projectsGrid) return;
     
-    // Solo procesar las tarjetas que realmente tienen contenido
-    const projectCards = Array.from(projectsGrid.querySelectorAll('.project-card')).filter(card => 
+    // Obtener todas las tarjetas de proyectos válidas
+    const projectCards = Array.from(document.querySelectorAll('.project-card')).filter(card => 
         card.querySelector('.project-img') && 
-        card.querySelector('h3')
+        card.querySelector('h3') && 
+        card.querySelector('p')
     );
     
     if (projectCards.length === 0) return;
@@ -58,87 +36,64 @@ function initProjectsCarousel() {
     const carousel = document.createElement('div');
     carousel.className = 'projects-carousel';
     
-    // Dividir los proyectos en slides y simplificar las tarjetas
-    const createSlides = () => {
+    // Dividir los proyectos en slides
+    function createSlides() {
         carousel.innerHTML = '';
         projectsPerSlide = getProjectsPerSlide();
         
-        for (let i = 0; i < projectCards.length; i += projectsPerSlide) {
+        // Calcular cuántos slides necesitamos
+        const slideCount = Math.ceil(projectCards.length / projectsPerSlide);
+        
+        for (let i = 0; i < slideCount; i++) {
             const slide = document.createElement('div');
             slide.className = 'carousel-slide';
             
-            for (let j = i; j < i + projectsPerSlide && j < projectCards.length; j++) {
-                // Clonar solo los elementos que necesitamos para una versión simplificada
-                const originalCard = projectCards[j];
-                const card = document.createElement('div');
-                card.className = 'project-card';
-                card.dataset.category = originalCard.dataset.category;
+            // Añadir proyectos al slide actual
+            for (let j = 0; j < projectsPerSlide; j++) {
+                const cardIndex = i * projectsPerSlide + j;
                 
-                // Obtener el proyecto ID del botón original
-                const detailsBtn = originalCard.querySelector('.project-details-btn');
-                const projectId = detailsBtn ? detailsBtn.dataset.projectId : '';
-                
-                // Extraer imagen, título y descripción
-                const imgContainer = originalCard.querySelector('.project-img');
-                const title = originalCard.querySelector('h3').textContent;
-                const description = originalCard.querySelector('p') ? originalCard.querySelector('p').textContent : '';
-                const codeLink = originalCard.querySelector('.btn-outline') ? originalCard.querySelector('.btn-outline').href : '#';
-                
-                // Construir la tarjeta simplificada
-                card.innerHTML = `
-                    <div class="project-img">
-                        ${getProjectImage(imgContainer)}
-                    </div>
-                    <div class="project-info">
-                        <h3>${title}</h3>
-                        <p>${description}</p>
-                        <div class="project-links">
-                            <button class="btn btn-sm project-details-btn" data-project-id="${projectId}">Ver Detalles</button>
-                            <a href="${codeLink}" class="btn btn-sm btn-outline" target="_blank">
-                                <i class="fab fa-github"></i>
-                            </a>
-                        </div>
-                    </div>
-                `;
-                
-                // Asignar correctamente el evento click al botón de detalles
-                const newDetailsBtn = card.querySelector('.project-details-btn');
-                if (newDetailsBtn && projectId) {
-                    newDetailsBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        if (typeof openProjectModal === 'function') {
-                            openProjectModal(projectId);
+                if (cardIndex < projectCards.length) {
+                    // Clonar la tarjeta para el carrusel
+                    const clonedCard = projectCards[cardIndex].cloneNode(true);
+                    
+                    // Asegurarse de que los event listeners estén correctamente asignados
+                    const projectId = clonedCard.querySelector('.project-details-btn')?.dataset.projectId;
+                    
+                    if (projectId) {
+                        // Hacer que toda la tarjeta sea clickeable
+                        clonedCard.addEventListener('click', function(e) {
+                            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || 
+                                e.target.closest('button') || e.target.closest('a')) {
+                                return;
+                            }
+                            
+                            if (typeof openProjectModal === 'function') {
+                                openProjectModal(projectId);
+                            }
+                        });
+                        
+                        // Asignar evento al botón de detalles
+                        const detailsBtn = clonedCard.querySelector('.project-details-btn');
+                        if (detailsBtn) {
+                            detailsBtn.addEventListener('click', function(e) {
+                                e.stopPropagation();
+                                if (typeof openProjectModal === 'function') {
+                                    openProjectModal(projectId);
+                                }
+                            });
                         }
-                    });
-                }
-
-                // Añadir listener para abrir el modal al hacer clic en cualquier parte de la tarjeta
-                card.addEventListener('click', function(e) {
-                    // Evitar la propagación si se hace clic en un botón o enlace
-                    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || 
-                        e.target.closest('button') || e.target.closest('a')) {
-                        return;
                     }
                     
-                    // Encontrar y hacer clic en el botón de detalles
-                    const detailsBtn = this.querySelector('.project-details-btn');
-                    if (detailsBtn && projectId) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        if (typeof openProjectModal === 'function') {
-                            openProjectModal(projectId);
-                        }
-                    }
-                });
-                
-                slide.appendChild(card);
+                    slide.appendChild(clonedCard);
+                }
             }
             
             carousel.appendChild(slide);
         }
-    };
+    }
     
     createSlides();
+    carouselContainer.appendChild(carousel);
     
     // Añadir controles de navegación
     const prevButton = document.createElement('div');
@@ -168,7 +123,6 @@ function initProjectsCarousel() {
     }
     
     // Añadir todo al DOM
-    carouselContainer.appendChild(carousel);
     carouselContainer.appendChild(prevButton);
     carouselContainer.appendChild(nextButton);
     carouselContainer.appendChild(dotsContainer);
