@@ -4,6 +4,19 @@
 // Variable global accesible para el índice del proyecto actual
 let currentProjectIndex = 0;
 
+function logCategoriesDebug() {
+    console.log("==== Depuración de categorías ====");
+    // Revisar los botones de filtro
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        console.log(`Botón: ${btn.textContent.trim()}, data-filter: ${btn.dataset.filter}`);
+    });
+    
+    // Revisar las tarjetas de proyectos
+    document.querySelectorAll('.project-card').forEach(card => {
+        console.log(`Tarjeta: ${card.querySelector('h3')?.textContent}, data-category: ${card.dataset.category}`);
+    });
+}
+
 // Hacer la función openProjectModal disponible globalmente
 window.openProjectModal = function(projectId) {
     console.log("Abriendo modal para proyecto:", projectId);
@@ -52,19 +65,34 @@ function initializeProjectsGrid() {
     // Limpiar el contenedor de proyectos
     projectsGrid.innerHTML = '';
     
-    // Añadir cada proyecto a la grid
+    // Verificar datos de proyectos
+    console.log("Verificando datos de proyectos:");
     PROJECTS_DATA.forEach(project => {
+        console.log(`Proyecto: ${project.title}, Categoría: ${project.category}`);
+    });
+    
+    // Filtrar proyectos vacíos o incorrectos
+    const validProjects = PROJECTS_DATA.filter(project => 
+        project && project.id && project.title && project.thumbnailImage && project.shortDescription
+    );
+    
+    // Añadir cada proyecto a la grid
+    validProjects.forEach(project => {
         const projectCard = createProjectCard(project);
         projectsGrid.appendChild(projectCard);
     });
+    
+    console.log(`Proyectos inicializados: ${validProjects.length}`);
 }
 
 // Función para crear una tarjeta de proyecto
 function createProjectCard(project) {
-    // Crear elemento para la tarjeta de proyecto
-    const card = document.createElement('div');
-    card.className = 'project-card';
-    card.dataset.category = project.category;
+     // Crear elemento para la tarjeta de proyecto
+     const card = document.createElement('div');
+     card.className = 'project-card';
+     card.dataset.category = project.category;
+
+     console.log(`Creando tarjeta para proyecto ${project.title} con categoría ${project.category}`);
     
     // Generar el HTML de la tarjeta
     card.innerHTML = `
@@ -283,7 +311,60 @@ function closeProjectModal() {
         
         // Pausar videos si hay alguno en reproducción
         pauseAllYouTubeVideos();
+        
+        // Determinar qué filtro está activo actualmente
+        const activeFilter = document.querySelector('.filter-btn.active');
+        const currentFilter = activeFilter ? activeFilter.dataset.filter : 'all';
+        
+        console.log(`Filtro activo al cerrar modal: ${currentFilter}`);
+        
+        // Reconstruir completamente el grid y el carrusel según el filtro activo
+        resetProjectsGrid(currentFilter);
     }
+}
+
+function resetProjectsGrid(filter = 'all') {
+    // 1. Eliminar el carrusel existente
+    const existingCarousel = document.querySelector('.projects-carousel-container');
+    if (existingCarousel) {
+        existingCarousel.remove();
+    }
+    
+    // 2. Obtener o crear el grid
+    const projectsContainer = document.querySelector('.projects .container');
+    let projectsGrid = document.querySelector('.projects-grid');
+    
+    if (!projectsGrid) {
+        projectsGrid = document.createElement('div');
+        projectsGrid.className = 'projects-grid';
+        projectsContainer.appendChild(projectsGrid);
+    }
+    
+    // 3. Limpiar el grid
+    projectsGrid.innerHTML = '';
+    
+    // 4. Filtrar proyectos según el filtro activo
+    let filteredProjects = [];
+    if (filter === 'all') {
+        filteredProjects = PROJECTS_DATA;
+    } else {
+        filteredProjects = PROJECTS_DATA.filter(project => 
+            normalizeCategory(project.category) === filter
+        );
+    }
+    
+    // 5. Añadir los proyectos filtrados al grid
+    filteredProjects.forEach(project => {
+        const projectCard = createProjectCard(project);
+        projectsGrid.appendChild(projectCard);
+    });
+    
+    // 6. Inicializar el carrusel con los nuevos elementos
+    setTimeout(() => {
+        if (typeof initProjectsCarousel === 'function') {
+            initProjectsCarousel();
+        }
+    }, 100);
 }
 
 // Inicializar modal y añadir al DOM
@@ -477,24 +558,73 @@ function initializeProjectFilters() {
     
     filterBtns.forEach(btn => {
         btn.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            console.log(`Filtro seleccionado: ${filter}`);
+            
             // Remover clase active de todos los botones
             filterBtns.forEach(btn => btn.classList.remove('active'));
             // Añadir clase active al botón actual
             this.classList.add('active');
             
-            const filter = this.dataset.filter;
+            // ENFOQUE COMPLETAMENTE NUEVO:
+            // 1. Eliminar el carrusel existente
+            const existingCarousel = document.querySelector('.projects-carousel-container');
+            if (existingCarousel) {
+                existingCarousel.remove();
+            }
             
-            // Filtrar proyectos
-            const projectCards = document.querySelectorAll('.project-card');
-            projectCards.forEach(card => {
-                if (filter === 'all') {
-                    card.style.display = 'block';
-                } else if (card.dataset.category === filter) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+            // 2. Recrear el grid de proyectos, pero solo con los proyectos de la categoría seleccionada
+            const projectsContainer = document.querySelector('.projects .container');
+            let projectsGrid = document.querySelector('.projects-grid');
+            
+            if (!projectsGrid) {
+                projectsGrid = document.createElement('div');
+                projectsGrid.className = 'projects-grid';
+                projectsContainer.appendChild(projectsGrid);
+            }
+            
+            // Limpiar el grid
+            projectsGrid.innerHTML = '';
+            
+            // 3. Añadir al grid solo los proyectos que corresponden a la categoría seleccionada
+            let filteredProjects = [];
+            if (filter === 'all') {
+                filteredProjects = PROJECTS_DATA;
+            } else {
+                filteredProjects = PROJECTS_DATA.filter(project => 
+                    normalizeCategory(project.category) === filter
+                );
+            }
+            
+            console.log(`Proyectos filtrados para categoría ${filter}: ${filteredProjects.length}`);
+            
+            // Si no hay proyectos en esta categoría, mostrar mensaje
+            if (filteredProjects.length === 0) {
+                const emptyMessage = document.createElement('div');
+                emptyMessage.className = 'empty-projects-message';
+                emptyMessage.innerHTML = `
+                    <p>No hay proyectos disponibles en esta categoría.</p>
+                `;
+                emptyMessage.style.textAlign = 'center';
+                emptyMessage.style.padding = '2rem';
+                emptyMessage.style.color = 'var(--gray-color)';
+                
+                projectsGrid.appendChild(emptyMessage);
+                return;
+            }
+            
+            // Añadir los proyectos filtrados al grid
+            filteredProjects.forEach(project => {
+                const projectCard = createProjectCard(project);
+                projectsGrid.appendChild(projectCard);
             });
+            
+            // 4. Inicializar el carrusel con los nuevos elementos
+            setTimeout(() => {
+                if (typeof initProjectsCarousel === 'function') {
+                    initProjectsCarousel();
+                }
+            }, 100);
         });
     });
 }

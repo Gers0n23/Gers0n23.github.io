@@ -10,14 +10,23 @@ function initProjectsCarousel() {
     const projectsGrid = document.querySelector('.projects-grid');
     if (!projectsGrid) return;
     
-    // Obtener todas las tarjetas de proyectos válidas
-    const projectCards = Array.from(document.querySelectorAll('.project-card')).filter(card => 
-        card.querySelector('.project-img') && 
-        card.querySelector('h3') && 
-        card.querySelector('p')
-    );
+    console.log("Inicializando el carrusel de proyectos...");
     
-    if (projectCards.length === 0) return;
+    // Obtener todas las tarjetas de proyectos válidas
+    const projectCards = Array.from(projectsGrid.querySelectorAll('.project-card')).filter(card => {
+        const hasImage = card.querySelector('.project-img img') !== null;
+        const hasTitle = card.querySelector('h3') !== null && card.querySelector('h3').textContent.trim() !== '';
+        const hasDescription = card.querySelector('p') !== null;
+        
+        return hasImage && hasTitle && hasDescription;
+    });
+    
+    console.log(`Tarjetas válidas encontradas: ${projectCards.length}`);
+    
+    if (projectCards.length === 0) {
+        console.log("No se encontraron tarjetas válidas para el carrusel");
+        return;
+    }
     
     // Determinar cuántos proyectos mostrar por slide según el ancho de la ventana
     const getProjectsPerSlide = () => {
@@ -43,6 +52,7 @@ function initProjectsCarousel() {
         
         // Calcular cuántos slides necesitamos
         const slideCount = Math.ceil(projectCards.length / projectsPerSlide);
+        console.log(`Creando ${slideCount} slides con ${projectsPerSlide} proyectos por slide`);
         
         for (let i = 0; i < slideCount; i++) {
             const slide = document.createElement('div');
@@ -57,7 +67,8 @@ function initProjectsCarousel() {
                     const clonedCard = projectCards[cardIndex].cloneNode(true);
                     
                     // Asegurarse de que los event listeners estén correctamente asignados
-                    const projectId = clonedCard.querySelector('.project-details-btn')?.dataset.projectId;
+                    const detailsBtn = clonedCard.querySelector('.project-details-btn');
+                    const projectId = detailsBtn ? detailsBtn.dataset.projectId : null;
                     
                     if (projectId) {
                         // Hacer que toda la tarjeta sea clickeable
@@ -68,20 +79,29 @@ function initProjectsCarousel() {
                             }
                             
                             if (typeof openProjectModal === 'function') {
+                                console.log(`Clic en tarjeta para abrir proyecto: ${projectId}`);
                                 openProjectModal(projectId);
                             }
                         });
                         
                         // Asignar evento al botón de detalles
-                        const detailsBtn = clonedCard.querySelector('.project-details-btn');
                         if (detailsBtn) {
                             detailsBtn.addEventListener('click', function(e) {
                                 e.stopPropagation();
                                 if (typeof openProjectModal === 'function') {
+                                    console.log(`Clic en botón para abrir proyecto: ${projectId}`);
                                     openProjectModal(projectId);
                                 }
                             });
                         }
+                    }
+                    
+                    // Asegurar que las imágenes tengan fallback
+                    const img = clonedCard.querySelector('.project-img img');
+                    if (img) {
+                        img.onerror = function() {
+                            this.src = 'img/proyecto_default.jpg';
+                        };
                     }
                     
                     slide.appendChild(clonedCard);
@@ -145,6 +165,8 @@ function initProjectsCarousel() {
         document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
             dot.classList.toggle('active', index === currentSlide);
         });
+        
+        console.log(`Cambiando a slide ${currentSlide}`);
     }
     
     // Event listeners para los botones
@@ -156,10 +178,27 @@ function initProjectsCarousel() {
         goToSlide(currentSlide + 1);
     });
     
+    // Mostrar u ocultar botones según la posición
+    function updateNavigationButtons() {
+        // Siempre mostrar los botones, pero deshabilitarlos visualmente si es necesario
+        prevButton.style.opacity = currentSlide === 0 ? '0.5' : '1';
+        prevButton.style.cursor = currentSlide === 0 ? 'default' : 'pointer';
+        
+        nextButton.style.opacity = currentSlide === slideCount - 1 ? '0.5' : '1';
+        nextButton.style.cursor = currentSlide === slideCount - 1 ? 'default' : 'pointer';
+    }
+    
+    // Actualizar botones al inicio
+    updateNavigationButtons();
+    
+    // Actualizar botones al cambiar de slide
+    carousel.addEventListener('transitionend', updateNavigationButtons);
+    
     // Reconfigurar el carrusel al cambiar el tamaño de la ventana
     window.addEventListener('resize', function() {
         const newProjectsPerSlide = getProjectsPerSlide();
         if (projectsPerSlide !== newProjectsPerSlide) {
+            console.log(`Cambio de tamaño detectado. Proyectos por slide: ${newProjectsPerSlide}`);
             createSlides();
             
             // Actualizar controles
@@ -179,8 +218,53 @@ function initProjectsCarousel() {
                 dotsContainer.appendChild(dot);
             }
             
+            // Resetear a la primera slide
             currentSlide = 0;
             goToSlide(0);
+            updateNavigationButtons();
         }
     });
+    
+    // Añadir navegación con teclado
+    document.addEventListener('keydown', function(e) {
+        // Solo si el carrusel está visible
+        const carousel = document.querySelector('.projects-carousel-container');
+        if (!carousel) return;
+        
+        // No interferir con inputs o textareas
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        
+        if (e.key === 'ArrowLeft') {
+            goToSlide(currentSlide - 1);
+        } else if (e.key === 'ArrowRight') {
+            goToSlide(currentSlide + 1);
+        }
+    });
+    
+    // Añadir soporte para swipe en móviles
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    carousel.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    }, false);
+    
+    carousel.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, false);
+    
+    function handleSwipe() {
+        const swipeThreshold = 50; // mínimo de píxeles para considerar un swipe
+        
+        if (touchEndX + swipeThreshold < touchStartX) {
+            // Swipe izquierda (siguiente)
+            goToSlide(currentSlide + 1);
+        } else if (touchEndX > touchStartX + swipeThreshold) {
+            // Swipe derecha (anterior)
+            goToSlide(currentSlide - 1);
+        }
+    }
+    
+    console.log("Carrusel inicializado correctamente");
 }
