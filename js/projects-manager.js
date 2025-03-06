@@ -4,6 +4,25 @@
 // Variable global accesible para el índice del proyecto actual
 let currentProjectIndex = 0;
 
+// Mapeo de categorías
+const CATEGORY_MAPPING = {
+    'data-science': 'data-science',
+    'datascience': 'data-science',
+    'visualizacion': 'visualizacion',
+    'dashboards': 'visualizacion',
+    'desarrollo': 'desarrollo',
+    'development': 'desarrollo',
+    'logistica': 'logistica',
+    'logistics': 'logistica'
+};
+
+// Función para normalizar categorías
+function normalizeCategory(category) {
+    if (!category) return 'all';
+    const normalized = CATEGORY_MAPPING[category.toLowerCase()];
+    return normalized || category;
+}
+
 function logCategoriesDebug() {
     console.log("==== Depuración de categorías ====");
     // Revisar los botones de filtro
