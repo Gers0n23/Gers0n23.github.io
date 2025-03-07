@@ -390,3 +390,173 @@
         transform: translateY(0);
     }
 }
+
+/* Pie del modal fijo */
+.modal-footer {
+    position: sticky;
+    bottom: 0;
+    background-color: white;
+    padding: 15px 25px;
+    border-top: 1px solid var(--light-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+/* Reorganización de botones de acción */
+.footer-actions {
+    display: flex;
+    gap: 15px;
+}
+
+/* Ajustes en el contenido del modal */
+.modal-content {
+    padding-bottom: 20px;
+}
+
+/* Estilos para los detalles reorganizados */
+.project-overview {
+    background-color: #f8f9fa;
+    border-radius: var(--border-radius);
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.project-overview h4 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+/* Ajuste para que las imágenes se muestren correctamente */
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: #f0f0f0;
+}
+
+/* Añadir mensaje cuando la imagen no carga */
+.carousel-slide .image-error-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--gray-color);
+    text-align: center;
+    width: 80%;
+}
+
+/* Estilos específicos para el carrusel del modal */
+.modal-carousel-container {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    position: relative;
+    box-shadow: var(--shadow-md);
+    background-color: var(--light-color);
+}
+
+.modal-carousel-slide {
+    width: 100%;
+    height: 400px;
+    display: none;
+    position: relative;
+    background-color: #f8f9fa;
+}
+
+.modal-carousel-slide.active {
+    display: block;
+}
+
+.modal-carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: var(--border-radius);
+}
+
+.modal-carousel-slide iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.modal-slide-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 15px;
+    font-size: 14px;
+    z-index: 5;
+}
+
+.modal-carousel-controls {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    z-index: 5;
+}
+
+.modal-carousel-dot {
+    width: 12px;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal-carousel-dot.active {
+    background-color: white;
+}
+
+.modal-carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    transition: background-color 0.3s;
+}
+
+.modal-carousel-nav:hover {
+    background-color: white;
+}
+
+.modal-carousel-prev {
+    left: 15px;
+}
+
+.modal-carousel-next {
+    right: 15px;
+}
+
+.modal-image-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--gray-color);
+    text-align: center;
+    padding: 20px;
+}
+
+.modal-image-error i {
+    margin-bottom: 15px;
+}
