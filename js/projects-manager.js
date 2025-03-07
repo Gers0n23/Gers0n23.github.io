@@ -356,7 +356,14 @@ function resetProjectsGrid(filter = 'all') {
     if (!projectsGrid) {
         projectsGrid = document.createElement('div');
         projectsGrid.className = 'projects-grid';
-        projectsContainer.appendChild(projectsGrid);
+        
+        // Asegurarse de insertar el grid antes del botón "Ver más proyectos"
+        const projectsMore = document.querySelector('.projects-more');
+        if (projectsMore) {
+            projectsContainer.insertBefore(projectsGrid, projectsMore);
+        } else {
+            projectsContainer.appendChild(projectsGrid);
+        }
     }
     
     // 3. Limpiar el grid

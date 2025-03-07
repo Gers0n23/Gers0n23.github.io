@@ -227,3 +227,23 @@
     left: 0;
     right: 0;
 }
+
+@media screen and (max-width: 576px) {
+    .project-card {
+        flex: 0 0 calc(100% - 1rem) !important;
+        max-width: calc(100% - 1rem) !important;
+        margin: 0 0.5rem 15px 0.5rem !important;
+        height: auto !important;
+        min-height: 380px;
+    }
+    
+    .project-img {
+        height: 180px !important;
+        width: 100% !important;
+    }
+    
+    .carousel-slide {
+        justify-content: center !important;
+        padding: 0 !important;
+    }
+}

@@ -148,7 +148,13 @@ function initProjectsCarousel() {
     carouselContainer.appendChild(dotsContainer);
     
     // Reemplazar la grid con el carrusel
+    const projectsMore = document.querySelector('.projects-more');
+if (projectsMore) {
+    projectsGrid.parentNode.insertBefore(carouselContainer, projectsMore);
+    projectsGrid.style.display = 'none';
+} else {
     projectsGrid.parentNode.replaceChild(carouselContainer, projectsGrid);
+}
     
     // Variables de control
     let currentSlide = 0;
