@@ -115,23 +115,18 @@ function createProjectCard(project) {
     
     // Generar el HTML de la tarjeta
     card.innerHTML = `
-        <div class="project-img">
-            <img src="${project.thumbnailImage}" alt="${project.title}" onerror="this.src='img/proyecto_default.jpg'">
+    <div class="project-img">
+        <img src="${project.thumbnailImage}" alt="${project.title}" onerror="this.src='img/proyecto_default.jpg'">
+    </div>
+    <div class="project-info">
+        <h3>${project.title}</h3>
+        <p>${project.shortDescription}</p>
+        <div class="project-links">
+            <button class="btn btn-sm project-details-btn" data-project-id="${project.id}">Ver Detalles</button>
+            <a href="${project.codeUrl}" class="btn btn-sm btn-outline" target="_blank">Código <i class="fab fa-github"></i></a>
         </div>
-        <div class="project-info">
-            <h3>${project.title}</h3>
-            <p>${project.shortDescription}</p>
-            <div class="project-tags">
-                ${project.technologies.slice(0, 4).map(tech => 
-                    `<span><i class="${tech.icon}"></i> ${tech.name}</span>`
-                ).join('')}
-            </div>
-            <div class="project-links">
-                <button class="btn btn-sm project-details-btn" data-project-id="${project.id}">Ver Detalles</button>
-                <a href="${project.codeUrl}" class="btn btn-sm btn-outline" target="_blank">Código <i class="fab fa-github"></i></a>
-            </div>
-        </div>
-    `;
+    </div>
+`;
     
     // Hacer que toda la tarjeta sea clickeable para abrir el modal
     card.addEventListener('click', function(e) {
