@@ -1245,3 +1245,29 @@ p {
         }
     }
 }
+
+/* Estilos para links de contacto */
+.contact-detail-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s ease;
+}
+
+.contact-detail-link:hover {
+    transform: translateY(-3px);
+}
+
+.contact-detail-link .contact-text span {
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 0.3s ease;
+}
+
+.contact-detail-link:hover .contact-text span {
+    color: white;
+}
+
+.contact-detail-link:hover .contact-icon {
+    background-color: rgba(255, 255, 255, 0.3);
+}
