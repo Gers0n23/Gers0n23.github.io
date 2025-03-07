@@ -150,215 +150,115 @@ function createProjectCard(project) {
 }
 
 // Función para construir el contenido del modal
+
 function buildProjectModal(project) {
-    const modalProjectTitle = document.getElementById('modalProjectTitle');
-    const modalProjectCategory = document.getElementById('modalProjectCategory');
+    console.log("Construyendo modal para proyecto:", project);
     
-    if (modalProjectTitle) modalProjectTitle.textContent = project.title;
-    if (modalProjectCategory) modalProjectCategory.textContent = project.categoryLabel;
+    // Actualizar título y categoría
+    document.getElementById('modalProjectTitle').textContent = project.title;
+    document.getElementById('modalProjectCategory').textContent = project.categoryLabel || project.category;
     
-    // Actualizar el carrusel
-    // Función para actualizar el carrusel del modal
-function updateCarousel(mediaItems) {
-    const carouselContainer = document.getElementById('modalCarouselContainer');
-    const carouselControls = document.getElementById('modalCarouselControls');
+    // Actualizar media (imagen/video)
+    updateProjectMedia(project);
     
-    if (!carouselContainer || !carouselControls) {
-        console.error('No se encontraron los contenedores del carrusel modal');
-        return;
-    }
-    
-    // Depuración - ver qué está llegando
-    console.log('Media items recibidos:', mediaItems);
-    
-    // Limpiar contenedores
-    carouselContainer.innerHTML = '';
-    carouselControls.innerHTML = '';
-    
-    // Verificar si hay elementos multimedia
-    if (!mediaItems || mediaItems.length === 0) {
-        console.log('No hay items multimedia, mostrando imagen por defecto');
-        // Mostrar imagen por defecto si no hay elementos
-        const defaultSlide = document.createElement('div');
-        defaultSlide.className = 'modal-carousel-slide active';
-        defaultSlide.innerHTML = `
-            <img src="img/proyecto_default.jpg" alt="Imagen no disponible">
-            <div class="modal-slide-caption">No hay imágenes disponibles para este proyecto</div>
-        `;
-        carouselContainer.appendChild(defaultSlide);
-        return;
-    }
-    
-    // Añadir cada elemento multimedia
-    mediaItems.forEach((item, index) => {
-        console.log(`Procesando item ${index}:`, item);
-        
-        // Crear slide
-        const slide = document.createElement('div');
-        slide.className = `modal-carousel-slide ${index === 0 ? 'active' : ''}`;
-        
-        // Contenido según tipo (imagen, video o youtube)
-        if (item.type === 'image') {
-            console.log(`Añadiendo imagen: ${item.url}`);
-            
-            // Crear la imagen manualmente para mejor control
-            const img = document.createElement('img');
-            img.alt = item.alt || item.caption || 'Imagen del proyecto';
-            img.src = item.url;
-            
-            // Manejar errores de carga de imagen
-            img.onerror = function() {
-                console.error(`Error al cargar la imagen: ${item.url}`);
-                this.style.display = 'none';
-                slide.innerHTML += `
-                    <div class="modal-image-error">
-                        <i class="fas fa-image fa-3x"></i>
-                        <p>Imagen no disponible</p>
-                    </div>
-                `;
-            };
-            
-            slide.appendChild(img);
-            
-            // Añadir caption si existe
-            if (item.caption) {
-                const caption = document.createElement('div');
-                caption.className = 'modal-slide-caption';
-                caption.textContent = item.caption;
-                slide.appendChild(caption);
-            }
-        } else if (item.type === 'youtube') {
-            console.log(`Añadiendo video de YouTube: ${item.videoId}`);
-            
-            // Verificar si tiene un ID de video válido
-            if (item.videoId && item.videoId !== 'YOUTUBE_VIDEO_ID') {
-                const iframe = document.createElement('iframe');
-                iframe.src = `https://www.youtube.com/embed/${item.videoId}`;
-                iframe.title = "YouTube video player";
-                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-                iframe.allowFullscreen = true;
-                
-                slide.appendChild(iframe);
-                
-                // Añadir caption si existe
-                if (item.caption) {
-                    const caption = document.createElement('div');
-                    caption.className = 'modal-slide-caption';
-                    caption.textContent = item.caption;
-                    slide.appendChild(caption);
-                }
-            } else {
-                console.warn('ID de YouTube no válido');
-                // Si no tiene ID válido, mostrar mensaje
-                slide.innerHTML = `
-                    <div class="modal-image-error">
-                        <i class="fab fa-youtube fa-3x"></i>
-                        <p>Video no disponible</p>
-                    </div>
-                `;
-                
-                if (item.caption) {
-                    slide.innerHTML += `<div class="modal-slide-caption">${item.caption}</div>`;
-                }
-            }
-        } else {
-            console.warn(`Tipo de media no reconocido: ${item.type}`);
-            // Tipo de media no reconocido
-            slide.innerHTML = `
-                <div class="modal-image-error">
-                    <i class="fas fa-question-circle fa-3x"></i>
-                    <p>Contenido no soportado</p>
-                </div>
-            `;
-        }
-        
-        carouselContainer.appendChild(slide);
-        
-        // Crear dot indicador
-        const dot = document.createElement('div');
-        dot.className = `modal-carousel-dot ${index === 0 ? 'active' : ''}`;
-        dot.dataset.slideIndex = index;
-        
-        dot.addEventListener('click', function() {
-            showModalSlide(parseInt(this.dataset.slideIndex));
-        });
-        
-        carouselControls.appendChild(dot);
-    });
-    
-    // Reiniciar el carrusel mostrando la primera imagen
-    if (mediaItems.length > 0) {
-        showModalSlide(0);
-    }
-    
-    // Verificar si hay más de un slide para mostrar/ocultar navegación
-    const showNavButtons = mediaItems.length > 1;
-    const prevBtn = document.getElementById('modalPrevSlideBtn');
-    const nextBtn = document.getElementById('modalNextSlideBtn');
-    
-    if (prevBtn) prevBtn.style.display = showNavButtons ? 'flex' : 'none';
-    if (nextBtn) nextBtn.style.display = showNavButtons ? 'flex' : 'none';
-}
-
-    // Función para mostrar un slide específico del modal
-    function showModalSlide(index) {
-        const slides = document.querySelectorAll('.modal-carousel-slide');
-        const dots = document.querySelectorAll('.modal-carousel-dot');
-
-        if (slides.length === 0) return;
-
-        // Pausar todos los videos de YouTube antes de cambiar de slide
-        pauseAllYouTubeVideos();
-
-        // Ocultar todos los slides
-        slides.forEach(slide => {
-            slide.classList.remove('active');
-        });
-
-        // Desactivar todos los dots
-        dots.forEach(dot => {
-            dot.classList.remove('active');
-        });
-
-        // Mostrar el slide seleccionado
-        slides[index].classList.add('active');
-        dots[index].classList.add('active');
-    }
-    
-    // Actualizar la información del proyecto
-    const projectDescription = document.getElementById('projectDescription');
-    if (projectDescription) {
-        projectDescription.innerHTML = project.fullDescription.replace(/\n/g, '<br>');
-    }
-    
-    // Actualizar detalles del proyecto
-    document.getElementById('projectDifficulty').textContent = project.difficulty;
-    document.getElementById('projectTime').textContent = project.developmentTime;
-    document.getElementById('projectImpact').textContent = project.impact;
-    document.getElementById('projectTeam').textContent = project.team;
+    // Actualizar detalles
+    document.getElementById('projectDifficulty').textContent = project.difficulty || 'No especificado';
+    document.getElementById('projectTime').textContent = project.developmentTime || 'No especificado';
+    document.getElementById('projectImpact').textContent = project.impact || 'No especificado';
+    document.getElementById('projectTeam').textContent = project.team || 'No especificado';
     
     // Actualizar tecnologías
-    const techTagsContainer = document.getElementById('projectTechTags');
-    if (techTagsContainer) {
-        techTagsContainer.innerHTML = '';
-        
-        project.technologies.forEach(tech => {
-            const tag = document.createElement('span');
-            tag.className = 'tech-tag';
-            tag.innerHTML = `<i class="${tech.icon}"></i> ${tech.name}`;
-            techTagsContainer.appendChild(tag);
-        });
+    updateProjectTechnologies(project);
+    
+    // Actualizar descripción
+    const descElement = document.getElementById('projectDescription');
+    if (descElement && project.fullDescription) {
+        descElement.innerHTML = project.fullDescription.replace(/\n/g, '<br>');
+    } else if (descElement) {
+        descElement.innerHTML = project.shortDescription || 'No hay descripción disponible';
     }
     
-    // Actualizar enlaces
-    //const demoBtn = document.getElementById('projectDemoBtn');
-    //const codeBtn = document.getElementById('projectCodeBtn');
+    // Actualizar botones
+    const demoBtn = document.getElementById('projectDemoBtn');
+    const codeBtn = document.getElementById('projectCodeBtn');
     
-    //if (demoBtn) demoBtn.href = project.demoUrl;
-    //if (codeBtn) codeBtn.href = project.codeUrl;
+    if (demoBtn) demoBtn.href = project.demoUrl || '#';
+    if (codeBtn) codeBtn.href = project.codeUrl || '#';
     
-    // Actualizar botones de navegación
-    //updateNavigationButtons();
+    // Actualizar navegación
+    updateNavigationButtons();
+}
+
+// Función para actualizar la imagen/video del proyecto
+function updateProjectMedia(project) {
+    const mediaContainer = document.getElementById('modalMediaContainer');
+    if (!mediaContainer) return;
+    
+    console.log("Actualizando media del proyecto:", project.media);
+    
+    // Limpiar contenedor
+    mediaContainer.innerHTML = '';
+    
+    // Si no hay media, mostrar imagen por defecto
+    if (!project.media || project.media.length === 0) {
+        mediaContainer.innerHTML = `
+            <img src="img/proyecto_default.jpg" alt="Imagen no disponible" class="default-image">
+            <p class="no-media-message">No hay imágenes disponibles para este proyecto</p>
+        `;
+        return;
+    }
+    
+    // Mostrar la primera imagen/video
+    const firstItem = project.media[0];
+    
+    if (firstItem.type === 'image') {
+        mediaContainer.innerHTML = `
+            <img src="${firstItem.url}" alt="${firstItem.alt || firstItem.caption || project.title}" 
+                 onerror="this.src='img/proyecto_default.jpg'">
+        `;
+    } else if (firstItem.type === 'youtube' && firstItem.videoId && firstItem.videoId !== 'YOUTUBE_VIDEO_ID') {
+        mediaContainer.innerHTML = `
+            <iframe src="https://www.youtube.com/embed/${firstItem.videoId}" 
+                    title="YouTube video player" 
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen></iframe>
+        `;
+    } else {
+        mediaContainer.innerHTML = `
+            <img src="img/proyecto_default.jpg" alt="Contenido no disponible" class="default-image">
+            <p class="no-media-message">El contenido multimedia no está disponible</p>
+        `;
+    }
+}
+
+// Función para actualizar las tecnologías del proyecto
+function updateProjectTechnologies(project) {
+    const techContainer = document.getElementById('modalTechContainer');
+    if (!techContainer) return;
+    
+    console.log("Actualizando tecnologías:", project.technologies);
+    
+    // Limpiar contenedor
+    techContainer.innerHTML = '';
+    
+    // Si no hay tecnologías, mostrar mensaje
+    if (!project.technologies || project.technologies.length === 0) {
+        techContainer.innerHTML = '<p class="no-tech-message">No se han especificado tecnologías para este proyecto</p>';
+        return;
+    }
+    
+    // Añadir cada tecnología
+    project.technologies.forEach(tech => {
+        const techTag = document.createElement('div');
+        techTag.className = 'tech-tag';
+        
+        const icon = tech.icon || 'fas fa-code';
+        const name = tech.name || 'Tecnología';
+        
+        techTag.innerHTML = `<i class="${icon}"></i> ${name}`;
+        techContainer.appendChild(techTag);
+    });
 }
 
 // Función para actualizar el carrusel
@@ -558,121 +458,108 @@ function initializeModal() {
     // Crear estructura del modal si no existe
     if (!document.getElementById('projectModalOverlay')) {
         const modalHTML = `
-            <div id="projectModalOverlay" class="modal-overlay">
-                <div id="projectModal" class="project-modal">
-                    <div class="modal-header">
-                        <div>
-                            <h2 id="modalProjectTitle" class="modal-title">Título del Proyecto</h2>
-                            <span id="modalProjectCategory" class="project-category">Categoría</span>
-                        </div>
-                        <button id="closeModalBtn" class="close-modal">
-                            <i class="fas fa-times"></i>
-                        </button>
+    <div id="projectModalOverlay" class="modal-overlay">
+        <div id="projectModal" class="project-modal">
+            <div class="modal-header">
+                <div>
+                    <h2 id="modalProjectTitle" class="modal-title">Título del Proyecto</h2>
+                    <span id="modalProjectCategory" class="project-category">Categoría</span>
+                </div>
+                <button id="closeModalBtn" class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div id="projectModalContent" class="modal-content">
+                <!-- Área para imágenes/videos -->
+                <div class="modal-media-section">
+                    <div class="modal-media-container" id="modalMediaContainer">
+                        <!-- Imágenes/videos se cargarán aquí -->
+                        <img src="img/proyecto_default.jpg" alt="Imagen por defecto">
                     </div>
+                </div>
 
-                    <div id="projectModalContent" class="modal-content">
-                        <div class="project-carousel">
-                            <div class="modal-carousel-container">
-                                <div id="modalCarouselContainer">
-                                    <!-- Slides se cargarán dinámicamente -->
-                                </div>
-
-                                <div id="modalPrevSlideBtn" class="modal-carousel-nav modal-carousel-prev">
-                                    <i class="fas fa-chevron-left"></i>
-                                </div>
-                                <div id="modalNextSlideBtn" class="modal-carousel-nav modal-carousel-next">
-                                    <i class="fas fa-chevron-right"></i>
-                                </div>
-
-                                <div id="modalCarouselControls" class="modal-carousel-controls">
-                                    <!-- Dots se cargarán dinámicamente -->
+                <!-- Información del proyecto -->
+                <div class="modal-info-section">
+                    <!-- Detalles del proyecto -->
+                    <div class="modal-project-details">
+                        <h3>Detalles del Proyecto</h3>
+                        
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <i class="fas fa-code-branch"></i>
+                                <div>
+                                    <h4>Dificultad</h4>
+                                    <p id="projectDifficulty">Media</p>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="project-info">
-                            <!-- Detalles del proyecto (ahora al inicio) -->
-                            <div class="project-overview">
-                                <h4>Detalles del Proyecto</h4>
-                                <div class="project-details">
-                                    <div class="detail-item">
-                                        <div class="detail-icon">
-                                            <i class="fas fa-code-branch"></i>
-                                        </div>
-                                        <div class="detail-content">
-                                            <h4>Dificultad</h4>
-                                            <p id="projectDifficulty">Media</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="detail-item">
-                                        <div class="detail-icon">
-                                            <i class="fas fa-clock"></i>
-                                        </div>
-                                        <div class="detail-content">
-                                            <h4>Tiempo de Desarrollo</h4>
-                                            <p id="projectTime">2 meses</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="detail-item">
-                                        <div class="detail-icon">
-                                            <i class="fas fa-chart-line"></i>
-                                        </div>
-                                        <div class="detail-content">
-                                            <h4>Impacto</h4>
-                                            <p id="projectImpact">Reducción 15% costos</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="detail-item">
-                                        <div class="detail-icon">
-                                            <i class="fas fa-users"></i>
-                                        </div>
-                                        <div class="detail-content">
-                                            <h4>Equipo</h4>
-                                            <p id="projectTeam">Individual</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <h4>Tecnologías Utilizadas</h4>
-                                <div id="projectTechTags" class="project-tech-tags">
-                                    <!-- Tags se cargarán dinámicamente -->
+                            
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <div>
+                                    <h4>Tiempo de Desarrollo</h4>
+                                    <p id="projectTime">2 meses</p>
                                 </div>
                             </div>
-
-                            <!-- Descripción del proyecto (ahora después de los detalles) -->
-                            <h4>Descripción</h4>
-                            <div id="projectDescription" class="project-description">
-                                <!-- Descripción se cargará dinámicamente -->
+                            
+                            <div class="detail-item">
+                                <i class="fas fa-chart-line"></i>
+                                <div>
+                                    <h4>Impacto</h4>
+                                    <p id="projectImpact">Reducción 15% costos</p>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <i class="fas fa-users"></i>
+                                <div>
+                                    <h4>Equipo</h4>
+                                    <p id="projectTeam">Individual</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="modal-footer">
-                        <div class="project-navigation">
-                            <button id="prevProjectBtn" class="nav-btn">
-                                <i class="fas fa-arrow-left"></i> Proyecto Anterior
-                            </button>
-                            <button id="nextProjectBtn" class="nav-btn">
-                                Proyecto Siguiente <i class="fas fa-arrow-right"></i>
-                            </button>
+                    
+                    <!-- Tecnologías -->
+                    <div class="modal-technologies">
+                        <h3>Tecnologías Utilizadas</h3>
+                        <div id="modalTechContainer" class="tech-tags-container">
+                            <!-- Tecnologías se cargarán aquí -->
                         </div>
-
-                        <!-- Movemos los botones de acción al footer -->
-                        <div class="footer-actions">
-                            <a id="projectDemoBtn" href="#" class="action-btn btn-primary" target="_blank">
-                                <i class="fas fa-external-link-alt"></i> Ver Demo
-                            </a>
-                            <a id="projectCodeBtn" href="#" class="action-btn btn-secondary" target="_blank">
-                                <i class="fab fa-github"></i> Ver Código
-                            </a>
+                    </div>
+                    
+                    <!-- Descripción -->
+                    <div class="modal-description">
+                        <h3>Descripción</h3>
+                        <div id="projectDescription" class="description-content">
+                            <!-- Descripción se cargará aquí -->
                         </div>
                     </div>
                 </div>
             </div>
-            `;
+
+            <div class="modal-footer">
+                <div class="project-navigation">
+                    <button id="prevProjectBtn" class="nav-btn">
+                        <i class="fas fa-arrow-left"></i> Proyecto Anterior
+                    </button>
+                    <button id="nextProjectBtn" class="nav-btn">
+                        Proyecto Siguiente <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div class="modal-actions">
+                    <a id="projectDemoBtn" href="#" class="btn btn-primary" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Ver Demo
+                    </a>
+                    <a id="projectCodeBtn" href="#" class="btn btn-secondary" target="_blank">
+                        <i class="fab fa-github"></i> Ver Código
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+`;
         
         // Añadir el modal al final del body
         document.body.insertAdjacentHTML('beforeend', modalHTML);
@@ -687,23 +574,23 @@ function initializeEventListeners() {
     // Botones de navegación del carrusel
     const prevSlideBtn = document.getElementById('modalPrevSlideBtn');
     const nextSlideBtn = document.getElementById('modalNextSlideBtn');
-    
+
     if (prevSlideBtn && nextSlideBtn) {
         prevSlideBtn.addEventListener('click', function() {
             const slides = document.querySelectorAll('.modal-carousel-slide');
             const activeDot = document.querySelector('.modal-carousel-dot.active');
             if (!activeDot) return;
-            
+
             let currentIndex = parseInt(activeDot.dataset.slideIndex);
             let prevIndex = (currentIndex - 1 + slides.length) % slides.length;
             showModalSlide(prevIndex);
         });
-        
+
         nextSlideBtn.addEventListener('click', function() {
             const slides = document.querySelectorAll('.modal-carousel-slide');
             const activeDot = document.querySelector('.modal-carousel-dot.active');
             if (!activeDot) return;
-            
+
             let currentIndex = parseInt(activeDot.dataset.slideIndex);
             let nextIndex = (currentIndex + 1) % slides.length;
             showModalSlide(nextIndex);
